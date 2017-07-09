@@ -54,6 +54,7 @@ class stepperMotor:
         GPIO.setmode(GPIO.BOARD)
         for pin in self.usedPins:
             GPIO.setup(pin, GPIO.OUT, initial = GPIO.LOW)
+        GPIO.output(self.enpin, GPIO.HIGH
 
     def step(self, direction):
         if direction == 'CW':
