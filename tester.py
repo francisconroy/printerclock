@@ -6,4 +6,4 @@ enpin = 12
 
 clockstepper = pc.stepperMotor(clkpin, dirpin, enpin)
 
-clockstepper.step("CW")
+clockstepper.multistep(100)
