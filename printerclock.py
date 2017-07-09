@@ -8,6 +8,8 @@ import os
 
 persistentfile = "currentpos.txt"
 steps_per_segment = 272
+minposition = 0
+maxposition = 6800
 
 segdict = {'early': '0',
     '1:00': '272',
@@ -36,6 +38,33 @@ segdict = {'early': '0',
     'late': '6528',
     'party': '6800'}
 
+
+def gettime():
+    hrs = time.localtime().tm_hour
+    mins = time.localtime().tm_min
+    dow = time.localtime().tm_wday
+    return hrs, mins, dow
+
+def getposition(hrs, mins, dow):
+    if mins >= 30:
+        mm = '30'
+    else:
+        mm = '00'
+
+    wday = dow
+    if (wday == 5 and hrs > 20) or (wday == 6 and hrs<7):
+        search = 'party'
+
+    elif hrs >= 23 or hrs < 7:
+        search = 'late'
+    else:
+        if hrs>12:
+            hrs-=12
+        search='{}:{}'.format(hrs, mm)
+    print hrs, mins, search
+    return int(segdict[search])
+
+
 class stepperMotor:
     delay = 0.0008
 
@@ -59,10 +88,16 @@ class stepperMotor:
     def step(self, direction):
         if direction == 'CW':
             GPIO.output(self.dirpin, GPIO.LOW)
-            self.current_position += 1
+            if self.current_position < maxposition:
+                self.current_position += 1
+            else:
+                return
         elif direction == 'CCW':
             GPIO.output(self.dirpin, GPIO.HIGH)
-            self.current_position -= 1
+            if self.current_position > minposition:
+                self.current_position -= 1
+            else:
+                return
         else:
             return
         time.sleep(stepperMotor.delay)  # sleep 5us
