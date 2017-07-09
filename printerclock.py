@@ -4,6 +4,7 @@
 # the file 'currentpos.txt' should be in the working directory and will be accessed every time the system starts. This way the printer can keep a record of it's current position.
 import RPi.GPIO as GPIO
 import time
+import os
 
 persistentfile = "currentpos.txt"
 steps_per_segment = 272
@@ -37,14 +38,18 @@ segdict = {'early': '0',
 
 class stepperMotor:
     delay = 0.0005
+
     def __init__(self, clkpin, dirpin, enpin):
         self.clkpin = clkpin
         self.dirpin = dirpin
         self.enpin = enpin
         self.usedPins = [self.clkpin, self.dirpin, self.enpin]
-        with open(persistentfile) as openfile:
-            self.current_position = int(openfile.read())
-            print "current position is:{}".format(self.current_position)
+        if os.file.exists(persistentfile):
+            with open(persistentfile) as openfile:
+                self.current_position = int(openfile.read())
+                print "current position is:{}".format(self.current_position)
+        else:
+            self.current_position = 0
         print "configuring GPIO"
         GPIO.setmode(GPIO.BOARD)
         for pin in self.usedPins:
@@ -81,6 +86,10 @@ class stepperMotor:
         steps = abs(steps_to_do)
         for single_step in range(steps):
             self.step(direction)
+        self.savepositiontofile()
+
+    def calibrate(self):
+        self.current_position = 0
 
 
 
