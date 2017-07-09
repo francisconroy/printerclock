@@ -10,5 +10,5 @@ clockstepper = pc.stepperMotor(clkpin, dirpin, enpin)
 while 1:
     h, m, d = pc.gettime()
     pos = pc.getposition(h, m, d)
-    pc.gotoposition(pos)
+    clockstepper.gotoposition(pos)
     time.sleep(30)
