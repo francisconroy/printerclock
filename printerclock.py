@@ -37,7 +37,7 @@ segdict = {'early': '0',
     'party': '6800'}
 
 class stepperMotor:
-    delay = 0.0005
+    delay = 0.005
 
     def __init__(self, clkpin, dirpin, enpin):
         self.clkpin = clkpin
