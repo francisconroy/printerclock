@@ -44,7 +44,7 @@ class stepperMotor:
         self.dirpin = dirpin
         self.enpin = enpin
         self.usedPins = [self.clkpin, self.dirpin, self.enpin]
-        if os.file.exists(persistentfile):
+        if os.path.exists(persistentfile):
             with open(persistentfile) as openfile:
                 self.current_position = int(openfile.read())
                 print "current position is:{}".format(self.current_position)
