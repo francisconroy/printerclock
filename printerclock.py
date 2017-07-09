@@ -70,6 +70,7 @@ class stepperMotor:
         GPIO.output(self.clkpin, GPIO.LOW)
 
     def savepositiontofile(self):
+        print self.current_position
         with open(persistentfile, mode='w') as of:
             of.write(str(self.current_position))
 
