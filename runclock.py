@@ -1,9 +1,9 @@
 import printerclock as pc
 import time
 
-clkpin = 8
-dirpin = 10
-enpin = 12
+clkpin = 12
+dirpin = 16
+enpin = 18
 
 clockstepper = pc.stepperMotor(clkpin, dirpin, enpin)
 
