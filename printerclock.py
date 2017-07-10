@@ -124,7 +124,8 @@ class stepperMotor:
         steps = abs(steps_to_do)
         for single_step in range(steps):
             self.step(direction)
-        self.savepositiontofile()
+        if steps > 0:
+            self.savepositiontofile()
 
     def calibrate(self):
         self.current_position = 0
