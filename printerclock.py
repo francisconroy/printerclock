@@ -73,6 +73,7 @@ class stepperMotor:
         self.dirpin = dirpin
         self.enpin = enpin
         self.usedPins = [self.clkpin, self.dirpin, self.enpin]
+        self.override = False
         if os.path.exists(persistentfile):
             with open(persistentfile) as openfile:
                 self.current_position = int(openfile.read())
@@ -88,13 +89,13 @@ class stepperMotor:
     def step(self, direction):
         if direction == 'CW':
             GPIO.output(self.dirpin, GPIO.LOW)
-            if self.current_position < maxposition:
+            if self.current_position < maxposition or override:
                 self.current_position += 1
             else:
                 return
         elif direction == 'CCW':
             GPIO.output(self.dirpin, GPIO.HIGH)
-            if self.current_position > minposition:
+            if self.current_position > minposition or override:
                 self.current_position -= 1
             else:
                 return
@@ -127,6 +128,9 @@ class stepperMotor:
 
     def calibrate(self):
         self.current_position = 0
+
+    def override(self, newstate):
+        self.override = newstate
 
 
 
