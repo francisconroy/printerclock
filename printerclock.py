@@ -89,13 +89,13 @@ class stepperMotor:
     def step(self, direction):
         if direction == 'CW':
             GPIO.output(self.dirpin, GPIO.LOW)
-            if self.current_position < maxposition or override:
+            if self.current_position < maxposition or self.override:
                 self.current_position += 1
             else:
                 return
         elif direction == 'CCW':
             GPIO.output(self.dirpin, GPIO.HIGH)
-            if self.current_position > minposition or override:
+            if self.current_position > minposition or self.override:
                 self.current_position -= 1
             else:
                 return
