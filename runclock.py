@@ -4,8 +4,9 @@ import time
 clkpin = 12
 dirpin = 16
 enpin = 18
+sleeppin = 11
 
-clockstepper = pc.stepperMotor(clkpin, dirpin, enpin)
+clockstepper = pc.stepperMotor(clkpin, dirpin, enpin, sleeppin)
 
 while 1:
     h, m, d = pc.gettime()

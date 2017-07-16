@@ -69,11 +69,12 @@ def getposition(hrs, mins, dow):
 class stepperMotor:
     delay = 0.0008
 
-    def __init__(self, clkpin, dirpin, enpin):
+    def __init__(self, clkpin, dirpin, enpin, sleeppin=None):
         self.clkpin = clkpin
         self.dirpin = dirpin
         self.enpin = enpin
-        self.usedPins = [self.clkpin, self.dirpin, self.enpin]
+        self.sleeppin = sleeppin
+        self.usedPins = [self.clkpin, self.dirpin, self.enpin, self.sleeppin]
         self.override = False
         if os.path.exists(persistentfile):
             with open(persistentfile) as openfile:
@@ -84,8 +85,13 @@ class stepperMotor:
         print "configuring GPIO"
         GPIO.setmode(GPIO.BOARD)
         for pin in self.usedPins:
-            GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+            if pin is not None:
+                GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
         GPIO.output(self.enpin, GPIO.LOW)
+        time.sleep(0.001)  # 1ms delay
+        if self.sleeppin is not None:
+            GPIO.output(self.sleeppin, GPIO.HIGH)
+            time.sleep(0.002)  # 2ms delay
 
     def step(self, direction):
         if direction == 'CW':
@@ -123,10 +129,21 @@ class stepperMotor:
         else:
             direction = 'CW'
         steps = abs(steps_to_do)
-        for single_step in range(steps):
-            self.step(direction)
-        if steps > 0:
+
+        if steps != 0:
+            # bring device out of sleep
+            if self.sleeppin is not None:
+                GPIO.output(self.sleeppin, GPIO.HIGH)
+                time.sleep(0.002)  # 2ms delay
+
+            for single_step in range(steps):
+                self.step(direction)
             self.savepositiontofile()
+
+            # put device back into sleep
+            if self.sleeppin is not None:
+                GPIO.output(self.sleeppin, GPIO.LOW)
+                time.sleep(0.002)  # 2ms delay
 
     def calibrate(self):
         self.current_position = 0
