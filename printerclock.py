@@ -83,6 +83,7 @@ class stepperMotorA4988:
                         'ms1pin',
                         'enpin']
         self.override = False
+        self.sleep = False
         if os.path.exists(persistentfile):
             with open(persistentfile) as openfile:
                 self.current_position = int(openfile.read())
@@ -156,7 +157,7 @@ class stepperMotorA4988:
             self.savepositiontofile()
 
             # put device back into sleep
-            if self.pindict['sleeppin'] is not None:
+            if self.pindict['sleeppin'] is not None and self.sleep:
                 GPIO.output(self.pindict['sleeppin'], GPIO.LOW)
                 time.sleep(0.002)  # 2ms delay
 
