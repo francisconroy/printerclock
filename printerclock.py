@@ -67,7 +67,7 @@ def getposition(hrs, mins, dow):
 
 
 class stepperMotorA4988:
-    delay = 0.01
+    delay = 0.0001
 
     def __init__(self, pindict):
         # pin dict should take a standard format for the A4988
@@ -83,7 +83,7 @@ class stepperMotorA4988:
                         'ms1pin',
                         'enpin']
         self.override = False
-        self.sleep = False
+        self.sleep = True
         if os.path.exists(persistentfile):
             with open(persistentfile) as openfile:
                 self.current_position = int(openfile.read())
