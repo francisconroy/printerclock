@@ -90,7 +90,7 @@ class stepperMotorA4988:
         else:
             self.current_position = 0
         print "configuring GPIO"
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
 
         # set all pins as outputs
         for pinname in self.reqpins:
