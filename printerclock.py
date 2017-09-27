@@ -95,7 +95,7 @@ class stepperMotorA4988:
         # set all pins as outputs
         for pinname in self.reqpins:
             print self.pindict[pinname]
-                GPIO.setup(self.pindict[pinname], GPIO.OUT, initial=GPIO.LOW)
+            GPIO.setup(self.pindict[pinname], GPIO.OUT, initial=GPIO.LOW)
 
         # configure multistepping
         mspinnames = ['ms3pin', 'ms2pin', 'ms1pin']
