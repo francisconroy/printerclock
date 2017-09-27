@@ -107,6 +107,7 @@ class stepperMotorA4988:
         #take driver out of sleep
         if self.pindict['sleeppin'] is not None:
             GPIO.output(self.pindict['sleeppin'], GPIO.HIGH)
+            GPIO.output(self.pindict['resetpin'], GPIO.HIGH)
             time.sleep(0.002)  # 2ms delay
 
     def step(self, direction):
