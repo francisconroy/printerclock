@@ -67,7 +67,7 @@ def getposition(hrs, mins, dow):
 
 
 class stepperMotorA4988:
-    delay = 0.001
+    delay = 0.01
 
     def __init__(self, pindict):
         # pin dict should take a standard format for the A4988
