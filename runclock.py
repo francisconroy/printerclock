@@ -1,12 +1,6 @@
 import printerclock as pc
 import time
 
-clkpin = 12
-dirpin = 16
-enpin = 18
-sleeppin = 11
-
-
 # a4988 breakout PCB
 pin_dict = {'dirpin': 4,
             'steppin': 17,
