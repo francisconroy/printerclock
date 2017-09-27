@@ -66,15 +66,22 @@ def getposition(hrs, mins, dow):
     return int(segdict[search])
 
 
-class stepperMotor:
+class stepperMotorA4988:
     delay = 0.0008
 
-    def __init__(self, clkpin, dirpin, enpin, sleeppin=None):
-        self.clkpin = clkpin
-        self.dirpin = dirpin
-        self.enpin = enpin
-        self.sleeppin = sleeppin
-        self.usedPins = [self.clkpin, self.dirpin, self.enpin, self.sleeppin]
+    def __init__(self, pindict):
+        # pin dict should take a standard format for the A4988
+        # pin_dict = {'clkpin':0,
+        #             'dirpin':1,}
+        self.pindict = pindict
+        self.reqpins = ['dirpin',
+                        'steppin',
+                        'sleeppin',
+                        'resetpin',
+                        'ms3pin',
+                        'ms2pin',
+                        'ms1pin',
+                        'enpin']
         self.override = False
         if os.path.exists(persistentfile):
             with open(persistentfile) as openfile:
@@ -84,34 +91,41 @@ class stepperMotor:
             self.current_position = 0
         print "configuring GPIO"
         GPIO.setmode(GPIO.BOARD)
-        for pin in self.usedPins:
-            if pin is not None:
-                GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.output(self.enpin, GPIO.LOW)
+
+        # set all pins as outputs
+        for pinname in self.reqpins:
+                GPIO.setup(self.pindict[pinname], GPIO.OUT, initial=GPIO.LOW)
+
+        # configure multistepping
+        mspinnames = ['ms3pin', 'ms2pin', 'ms1pin']
+        for pinname in mspinnames:
+            GPIO.output(self.pindict[pinname], GPIO.LOW)
+
         time.sleep(0.001)  # 1ms delay
-        if self.sleeppin is not None:
-            GPIO.output(self.sleeppin, GPIO.HIGH)
+        #take driver out of sleep
+        if self.pindict['sleeppin'] is not None:
+            GPIO.output(self.pindict['sleeppin'], GPIO.HIGH)
             time.sleep(0.002)  # 2ms delay
 
     def step(self, direction):
         if direction == 'CW':
-            GPIO.output(self.dirpin, GPIO.LOW)
+            GPIO.output(self.pindict['dirpin'], GPIO.LOW)
             if self.current_position < maxposition or self.override:
                 self.current_position += 1
             else:
                 return
         elif direction == 'CCW':
-            GPIO.output(self.dirpin, GPIO.HIGH)
+            GPIO.output(self.pindict['dirpin'], GPIO.HIGH)
             if self.current_position > minposition or self.override:
                 self.current_position -= 1
             else:
                 return
         else:
             return
-        time.sleep(stepperMotor.delay)  # sleep 5us
-        GPIO.output(self.clkpin, GPIO.HIGH)
-        time.sleep(stepperMotor.delay)  # sleep 5us
-        GPIO.output(self.clkpin, GPIO.LOW)
+        time.sleep(stepperMotorA4988.delay)  # sleep 5us
+        GPIO.output(self.pindict['steppin'], GPIO.HIGH)
+        time.sleep(stepperMotorA4988.delay)  # sleep 5us
+        GPIO.output(self.pindict['steppin'], GPIO.LOW)
 
     def savepositiontofile(self):
         print self.current_position
@@ -132,8 +146,8 @@ class stepperMotor:
 
         if steps != 0:
             # bring device out of sleep
-            if self.sleeppin is not None:
-                GPIO.output(self.sleeppin, GPIO.HIGH)
+            if self.pindict['sleeppin'] is not None:
+                GPIO.output(self.pindict['sleeppin'], GPIO.HIGH)
                 time.sleep(0.002)  # 2ms delay
 
             for single_step in range(steps):
@@ -141,8 +155,8 @@ class stepperMotor:
             self.savepositiontofile()
 
             # put device back into sleep
-            if self.sleeppin is not None:
-                GPIO.output(self.sleeppin, GPIO.LOW)
+            if self.pindict['sleeppin'] is not None:
+                GPIO.output(self.pindict['sleeppin'], GPIO.LOW)
                 time.sleep(0.002)  # 2ms delay
 
     def calibrate(self):
