@@ -21,8 +21,8 @@ template = """
 class S(BaseHTTPServer.BaseHTTPRequestHandler):
     def getstat_mock(self):
         return 1
-    def __init__(self):
-        self.getfunc = self.getstat_mock()
+    def addfunc(self, funcin):
+        self.getfunc = funcin
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
