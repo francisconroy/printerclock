@@ -37,13 +37,14 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        print("Door State is:{}")
+
         ds = check_door_status(pin_dict)
         if ds == 0:
             status = "closed"
         else:
             status = "open"
 
+        print("Door State is:{}".format(ds))
         self.wfile.write(template.format("<h1>Door is {}</h1>".format(ds)))
 
     def do_HEAD(self):
