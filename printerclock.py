@@ -137,8 +137,8 @@ class stepperMotorA4988:
 
     def gotoposition(self, desired_position):
         # calculate offset
-        movement = desired_position - self.current_position
-        self.multistep(movement)
+        delta_move = desired_position - self.current_position
+        self.multistep(delta_move)
 
     def multistep(self, steps_to_do):
         if steps_to_do < 0:
