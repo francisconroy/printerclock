@@ -61,5 +61,4 @@ handler_class = S
 
 server_class = BaseHTTPServer.HTTPServer
 httpd = server_class(server_address, handler_class)
-while 1:
-    httpd.handle_request()
+httpd.serve_forever()
