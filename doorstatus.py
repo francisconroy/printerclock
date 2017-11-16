@@ -44,7 +44,7 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
         else:
             status = "open"
 
-        print("Command is:{}".format(self.command))
+        print("Command is:{}".format(self.path))
         print("Door State is:{}".format(status))
         self.wfile.write(template.format("<h1>Door is {}</h1>".format(status)))
 
