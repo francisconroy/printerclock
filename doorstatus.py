@@ -36,7 +36,7 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if self.path.endswith('favicon.ico'):
+        if not self.path.endswith('favicon.ico'):
             self._set_headers()
             ds = check_door_status(pin_dict)
             if ds == 0:
