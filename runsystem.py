@@ -34,6 +34,7 @@ class ClockThread(threading.Thread):
 server_address = ('', 80)
 
 print("Initialising the system...")
+ds.do_init(pin_dict)
 handler_class = httpserver.S
 handler_class.getfunc = ds.check_door_status(pin_dict)
 server_class = BaseHTTPServer.HTTPServer
