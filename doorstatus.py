@@ -36,17 +36,17 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        self._set_headers()
+        if self.path.endswith('favicon.ico'):
+            self._set_headers()
+            ds = check_door_status(pin_dict)
+            if ds == 0:
+                status = "closed"
+            else:
+                status = "open"
 
-        ds = check_door_status(pin_dict)
-        if ds == 0:
-            status = "closed"
-        else:
-            status = "open"
-
-        print("Command is:{}".format(self.path))
-        print("Door State is:{}".format(status))
-        self.wfile.write(template.format("<h1>Door is {}</h1>".format(status)))
+            print("Command is:{}".format(self.path))
+            print("Door State is:{}".format(status))
+            self.wfile.write(template.format("<h1>Door is {}</h1>".format(status)))
 
     def do_HEAD(self):
         self._set_headers()
