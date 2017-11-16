@@ -47,6 +47,7 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
             print("Command is:{}".format(self.path))
             print("Door State is:{}".format(status))
             self.wfile.write(template.format("<h1>Door is {}</h1>".format(status)))
+        self.send_response(404)
 
     def do_HEAD(self):
         self._set_headers()
