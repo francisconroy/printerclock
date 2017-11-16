@@ -21,7 +21,7 @@ pin_dict = {'dirpin': 4,  # a4988 breakout PCB
 GPIO.setmode(GPIO.BCM)
 
 ## Configure threads
-class ClockThread(threading.thread):
+class ClockThread(threading.Thread):
     def run(self):
         clockstepper = pc.stepperMotorA4988(pin_dict)
         while 1:
