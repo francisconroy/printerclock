@@ -44,8 +44,8 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
         else:
             status = "open"
 
-        print("Door State is:{}".format(ds))
-        self.wfile.write(template.format("<h1>Door is {}</h1>".format(ds)))
+        print("Door State is:{}".format(status))
+        self.wfile.write(template.format("<h1>Door is {}</h1>".format(status)))
 
     def do_HEAD(self):
         self._set_headers()
