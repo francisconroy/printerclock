@@ -33,10 +33,7 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
         self._set_headers()
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
 
-## Resting
-def testfunc():
-    return random.randint(0, 1)
-
+## Testing
 def main():
     print("Starting testserver!")
     ## Web server config
@@ -44,7 +41,7 @@ def main():
 
     print("Initialising the system...")
     handler_class = S
-    handler_class.getfunc = testfunc()
+    handler_class.getfunc = random.randint(0, 1)
     server_class = BaseHTTPServer.HTTPServer
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
