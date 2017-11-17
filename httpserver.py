@@ -1,26 +1,10 @@
 import BaseHTTPServer
+import random
 
-template = """
-<!doctype html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-
-  <title>Testpage</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
-</head>
-
-<body>
-    {}
-</body>
-</html>
-"""
+with open("template.html") as openedfile:
+    template = openedfile.read()
 
 class S(BaseHTTPServer.BaseHTTPRequestHandler):
-    def getstat_mock(self):
-        return 1
     def addfunc(self, funcin):
         self.getfunc = funcin
     def _set_headers(self):
@@ -39,7 +23,7 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
 
             print("Command is:{}".format(self.path))
             print("Door State is:{}".format(status))
-            self.wfile.write(template.format("<h1>Door is {}</h1>".format(status)))
+            self.wfile.write(template.format(status))
 
     def do_HEAD(self):
         self._set_headers()
@@ -48,3 +32,23 @@ class S(BaseHTTPServer.BaseHTTPRequestHandler):
         # Doesn't do anything with posted data
         self._set_headers()
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
+
+## Resting
+def testfunc():
+    return random.randint(0, 1)
+
+def main():
+    print("Starting testserver!")
+    ## Web server config
+    server_address = ('', 8000)
+
+    print("Initialising the system...")
+    handler_class = S
+    handler_class.getfunc = testfunc()
+    server_class = BaseHTTPServer.HTTPServer
+    httpd = server_class(server_address, handler_class)
+    httpd.serve_forever()
+
+if __name__ == "__main__":
+    main()
+
