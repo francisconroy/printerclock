@@ -79,36 +79,47 @@ class ConfigFile(object):
             os.remove(self.filepath)
         self.users = []
 
+    def checkpin_from_dict(self, dict):
+        return self.checkpin(dict['pin_num'])
+
     def checkpin(self, checkpin):
         if int(checkpin) in self.list_pins():
             user = self.getuserfrompin(int(checkpin))
             print("Opening door: welcome {}".format(user.username))
+            return 1, user.username
         else:
             print("Sorry you aren't welcome here")
+            return 0, ""
 
 
 
-configfile = ConfigFile("userdata.txt")
-#configfile.cleardata()
-#configfile.print_users()
-#configfile.checkpin(7896)
-#configfile.checkpin()
 
 
-while(1):
-    command = raw_input()
-    if command == 'n':
-        new_username = raw_input("Please enter a username:")
-        new_pin = raw_input("Please enter a pin")
-        configfile.add_user(new_username, new_pin)
-    if command == 'l':
-        while(1):
-            checkpin = raw_input("What's your pin?")
-            if checkpin != '':
-                configfile.checkpin(checkpin)
-            else:
-                break
-    if command == 'list':
-        configfile.print_users()
-    else:
-        print("You can add_new(n) or login(l)")
+## Testing
+def main():
+    # configfile.cleardata()
+    # configfile.print_users()
+    # configfile.checkpin(7896)
+    # configfile.checkpin()
+    configfile = ConfigFile("userdata.txt")
+    while (1):
+        command = raw_input()
+        if command == 'n':
+            new_username = raw_input("Please enter a username:")
+            new_pin = raw_input("Please enter a pin")
+            configfile.add_user(new_username, new_pin)
+        if command == 'l':
+            while (1):
+                checkpin = raw_input("What's your pin?")
+                if checkpin != '':
+                    configfile.checkpin(checkpin)
+                else:
+                    break
+        if command == 'list':
+            configfile.print_users()
+        else:
+            print("You can add_new(n) or login(l)")
+
+if __name__ == "__main__":
+    main()
+
