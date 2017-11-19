@@ -49,6 +49,11 @@ class ConfigFile(object):
             if user.pin == int(pin):
                 return user
 
+    def getuserfromname(self, name):
+        for user in self.users:
+            if user.username == name:
+                return user
+
     def add_user(self, name, pin):
         if name not in self.list_users():
             newuser = DoorUser(name)
@@ -61,6 +66,10 @@ class ConfigFile(object):
             self.writefile()
         else:
             print("User is already in the database")
+
+    def remove_user(self, name):
+        self.users.remove(self.getuserfromname(name))
+        self.writefile()
 
     def change_pin(self, name, pin):
         for user in self.users:
@@ -102,12 +111,16 @@ def main():
     # configfile.checkpin(7896)
     # configfile.checkpin()
     configfile = ConfigFile("userdata.txt")
+    print ("Welcome to the administration interface for auth module V1.0")
     while (1):
         command = raw_input()
         if command == 'n':
             new_username = raw_input("Please enter a username:")
             new_pin = raw_input("Please enter a pin")
             configfile.add_user(new_username, new_pin)
+        if command == 'r':
+            user_to_remove = raw_input("Remove user:")
+            configfile.remove_user(user_to_remove)
         if command == 'l':
             while (1):
                 checkpin = raw_input("What's your pin?")
@@ -115,10 +128,12 @@ def main():
                     configfile.checkpin(checkpin)
                 else:
                     break
+        if command == 'e':
+            break
         if command == 'list':
             configfile.print_users()
         else:
-            print("You can add_new(n) or login(l)")
+            print("You can add_new(n), list(list) or login(l)")
 
 if __name__ == "__main__":
     main()

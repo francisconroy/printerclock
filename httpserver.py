@@ -5,17 +5,19 @@ import re
 with open("template.html") as openedfile:
     template = openedfile.read()
 
+
 class Server(BaseHTTPServer.BaseHTTPRequestHandler):
     def addfunc(self, funcin, *args):
         self.getfunc = funcin
         self.getfunc_args = args
+
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
     def _post_return_dict(self, indata):
-        regex=r"(.+)=(.+)"
+        regex = r"(.+)=(.+)"
         dict = {}
         for line in indata:
             print(line)
@@ -59,15 +61,16 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
         else:
             self.wfile.write("<html><body><h1>Sorry, not sure who you are</h1></body></html>")
 
-## Testing
+
+# Testing
 def main():
     import auth
-    ## Init auth
+    # Init auth
     configfile = auth.ConfigFile("userdata.txt")
     configfile.print_users()
 
     print("Starting testserver!")
-    ## Web server config
+    # Web server config
     server_address = ('', 8000)
 
     print("Initialising the system...")
@@ -79,6 +82,6 @@ def main():
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
 
+
 if __name__ == "__main__":
     main()
-

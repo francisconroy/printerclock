@@ -5,25 +5,37 @@ import BaseHTTPServer
 import RPi.GPIO as GPIO
 import httpserver
 import doorstat as ds
+import stepmotor as sm
 
 
 ## General config
-pin_dict = {'dirpin': 4,  # a4988 breakout PCB
+GPIO.setmode(GPIO.BCM)
+
+# A4988 pins
+pin_dict_a4988 = {'dirpin': 4,
             'steppin': 17,
             'sleeppin': 27,
             'resetpin': 22,
             'ms3pin': 18,
             'ms2pin': 25,
             'ms1pin': 24,
-            'enpin': 23,
-            'doorpin': 12}  # door status
-
-GPIO.setmode(GPIO.BCM)
+            'enpin': 23}
+# TB6560 pins
+pin_dict_TB6560 = {'dirpin': 4,
+            'steppin': 17,
+            'sleeppin': 27,
+            'resetpin': 22,
+            'ms3pin': 18,
+            'ms2pin': 25,
+            'ms1pin': 24,
+            'enpin': 23}
+# door status pins
+pin_dict_door_status = {'doorpin': 12}
 
 ## Configure threads
 class ClockThread(threading.Thread):
     def run(self):
-        clockstepper = pc.stepperMotorA4988(pin_dict)
+        clockstepper = sm.StepperMotorA4988(pin_dict_a4988, "A4988", 0, 6800)
         while 1:
             h, m, d = pc.gettime()
             pos = pc.getposition(h, m, d)
@@ -34,9 +46,9 @@ class ClockThread(threading.Thread):
 server_address = ('', 80)
 
 print("Initialising the system...")
-ds.do_init(pin_dict)
+ds.do_init(pin_dict_door_status)
 handler_class = httpserver.S
-handler_class.getfunc = ds.check_door_status(pin_dict)
+handler_class.getfunc = ds.check_door_status(pin_dict_door_status)
 server_class = BaseHTTPServer.HTTPServer
 httpd = server_class(server_address, handler_class)
 

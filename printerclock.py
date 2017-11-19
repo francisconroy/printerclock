@@ -6,10 +6,7 @@ import RPi.GPIO as GPIO
 import time
 import os
 
-persistentfile = "currentpos.txt"
 steps_per_segment = 272
-minposition = 0
-maxposition = 6800
 
 segdict = {'early': '0',
     '1:00': '272',
@@ -46,6 +43,7 @@ def gettime():
     dow = time.localtime().tm_wday
     return hrs, mins, dow
 
+
 def getposition(hrs, mins, dow):
     if mins >= 30:
         mm = '30'
@@ -59,115 +57,8 @@ def getposition(hrs, mins, dow):
     elif hrs >= 23 or hrs < 7:
         search = 'late'
     else:
-        if hrs>12:
-            hrs-=12
-        search='{}:{}'.format(hrs, mm)
+        if hrs > 12:
+            hrs -= 12
+        search = '{}:{}'.format(hrs, mm)
     print hrs, mins, search
     return int(segdict[search])
-
-
-class stepperMotorA4988:
-    delay = 0.001
-
-    def __init__(self, pindict):
-        # pin dict should take a standard format for the A4988
-        # pin_dict = {'clkpin':0,
-        #             'dirpin':1,}
-        self.pindict = pindict
-        self.reqpins = ['dirpin',
-                        'steppin',
-                        'sleeppin',
-                        'resetpin',
-                        'ms3pin',
-                        'ms2pin',
-                        'ms1pin',
-                        'enpin']
-        self.override = False
-        self.sleep = True
-        if os.path.exists(persistentfile):
-            with open(persistentfile) as openfile:
-                self.current_position = int(openfile.read())
-                print "current position is:{}".format(self.current_position)
-        else:
-            self.current_position = 0
-        print "configuring GPIO"
-        GPIO.setmode(GPIO.BCM)
-
-        # set all pins as outputs
-        for pinname in self.reqpins:
-            print self.pindict[pinname]
-            GPIO.setup(self.pindict[pinname], GPIO.OUT, initial=GPIO.LOW)
-
-        # configure multistepping
-        mspinnames = ['ms3pin', 'ms2pin', 'ms1pin']
-        for pinname in mspinnames:
-            GPIO.output(self.pindict[pinname], GPIO.LOW)
-
-        time.sleep(0.001)  # 1ms delay
-        #take driver out of sleep
-        if self.pindict['sleeppin'] is not None:
-            GPIO.output(self.pindict['sleeppin'], GPIO.HIGH)
-            GPIO.output(self.pindict['resetpin'], GPIO.HIGH)
-            time.sleep(0.002)  # 2ms delay
-
-    def step(self, direction):
-        if direction == 'CW':
-            GPIO.output(self.pindict['dirpin'], GPIO.HIGH)
-            if self.current_position < maxposition or self.override:
-                self.current_position += 1
-            else:
-                return
-        elif direction == 'CCW':
-            GPIO.output(self.pindict['dirpin'], GPIO.LOW)
-            if self.current_position > minposition or self.override:
-                self.current_position -= 1
-            else:
-                return
-        else:
-            return
-        time.sleep(stepperMotorA4988.delay)  # sleep 5us
-        GPIO.output(self.pindict['steppin'], GPIO.HIGH)
-        time.sleep(stepperMotorA4988.delay)  # sleep 5us
-        GPIO.output(self.pindict['steppin'], GPIO.LOW)
-
-    def savepositiontofile(self):
-        print self.current_position
-        with open(persistentfile, mode='w') as of:
-            of.write(str(self.current_position))
-
-    def gotoposition(self, desired_position):
-        # calculate offset
-        delta_move = desired_position - self.current_position
-        self.multistep(delta_move)
-
-    def multistep(self, steps_to_do):
-        if steps_to_do < 0:
-            direction = 'CCW'
-        else:
-            direction = 'CW'
-        steps = abs(steps_to_do)
-
-        if steps != 0:
-            # bring device out of sleep
-            if self.pindict['sleeppin'] is not None:
-                GPIO.output(self.pindict['sleeppin'], GPIO.HIGH)
-                time.sleep(0.002)  # 2ms delay
-
-            for single_step in range(steps):
-                self.step(direction)
-            self.savepositiontofile()
-
-            # put device back into sleep
-            if self.pindict['sleeppin'] is not None and self.sleep:
-                GPIO.output(self.pindict['sleeppin'], GPIO.LOW)
-                time.sleep(0.002)  # 2ms delay
-
-    def calibrate(self):
-        self.current_position = 0
-
-    def override(self, newstate):
-        self.override = newstate
-
-
-
-

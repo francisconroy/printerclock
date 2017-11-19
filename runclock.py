@@ -1,4 +1,5 @@
 import printerclock as pc
+import stepmotor as sm
 import time
 
 # a4988 breakout PCB
@@ -11,7 +12,7 @@ pin_dict = {'dirpin': 4,
             'ms1pin': 24,
             'enpin': 23}
 
-clockstepper = pc.stepperMotorA4988(pin_dict)
+clockstepper = sm.StepperMotorA4988(pin_dict, "A4988", 0, 6800)
 
 while 1:
     h, m, d = pc.gettime()
