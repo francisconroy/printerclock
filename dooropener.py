@@ -23,8 +23,8 @@ class Door(object):
 
 def main():
     import nymph_pins as np
-    door_status = ds.DoorStat(np.pin_dict_status)
-    door_driver = sm.StepperMotorTB6560(np.pin_dict_driver, sm.StepperMotorTB6560.type, 0, 260)
+    door_status = ds.DoorStat(np.pin_dict_door_status)
+    door_driver = sm.StepperMotorTB6560(np.pin_dict_TB6560, sm.StepperMotorTB6560.type, 0, 260)
     room_door = Door(door_status, door_driver)
     room_door.open_door()
     print("Door is open!")
