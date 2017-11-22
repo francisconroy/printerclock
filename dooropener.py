@@ -14,11 +14,11 @@ class Door(object):
         start_position = self.door_driver.current_position
         print("Not open")
         while(not self.door_status.check_door_status()):
-            #self.door_driver.step('CW') # add steps
+            self.door_driver.step('CW') # add steps
             print("Not open")
         print("Door is opened")
         # Return driver to initial position
-        #self.door_driver.gotoposition(start_position)
+        self.door_driver.gotoposition(start_position)
 
 
 def main():
