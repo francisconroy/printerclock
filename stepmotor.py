@@ -14,7 +14,7 @@ class StepperMotor:
     def __init__(self, pindict, name, minposition, maxposition, override=False):
         self.name = name
         self.maxposition = maxposition
-        self.minposision = minposition
+        self.minposition = minposition
         self.pindict = pindict
         self.persistentfile = StepperMotor.persistentfile_template.format(name)
 
