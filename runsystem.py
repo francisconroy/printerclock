@@ -6,12 +6,12 @@ import RPi.GPIO as GPIO
 import httpserver
 import doorstat as ds
 import stepmotor as sm
-from nymph_pins.py import *
+import nymph_pins as np
 
 ## Configure threads
 class ClockThread(threading.Thread):
     def run(self):
-        clockstepper = sm.StepperMotorA4988(pin_dict_a4988, sm.StepperMotorA4988.type, 0, 6800)
+        clockstepper = sm.StepperMotorA4988(np.pin_dict_a4988, sm.StepperMotorA4988.type, 0, 6800)
         while 1:
             h, m, d = pc.gettime()
             pos = pc.getposition(h, m, d)

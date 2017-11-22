@@ -103,6 +103,10 @@ class StepperMotorA4988(StepperMotor):
 
         time.sleep(0.001)  # 1ms delay
         #take driver out of sleep
+        GPIO.output(self.pindict['sleeppin'], GPIO.HIGH)
+        GPIO.output(self.pindict['resetpin'], GPIO.HIGH)
+
+
         self.sleepmode(False)
 
     def step(self, direction):
