@@ -1,5 +1,8 @@
 import RPi.GPIO as GPIO
 import stepmotor as sm
-from nymph_pins.py import *
+import nymph_pins as np
 
-sm.StepperMotorTB6560(pin_dict_TB6560, sm.StepperMotorTB6560.type, 0, 6800)
+## General config
+GPIO.setmode(GPIO.BCM)
+
+sm.StepperMotorTB6560(np.pin_dict_TB6560, sm.StepperMotorTB6560.type, 0, 6800)

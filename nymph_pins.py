@@ -1,6 +1,3 @@
-## General config
-GPIO.setmode(GPIO.BCM)
-
 # A4988 pins
 pin_dict_a4988 = {'dirpin': 4,
             'steppin': 17,
