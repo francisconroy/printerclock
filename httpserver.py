@@ -58,12 +58,17 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
         self._set_headers()
         if result:
             self.wfile.write("<html><body><h1>Come on in {}!</h1></body></html>".format(name))
+            # Open door
+            self.postactionfunc()
         else:
             self.wfile.write("<html><body><h1>Sorry, not sure who you are</h1></body></html>")
 
 
 # Testing
 def main():
+    def printhelloworld(object):
+        print("hello world")
+
     import auth
     # Init auth
     configfile = auth.ConfigFile("userdata.txt")
@@ -78,6 +83,7 @@ def main():
     handler_class.getfunc = random.randint
     handler_class.getfunc_args = (0, 1)
     handler_class.postfunc = configfile.checkpin_from_dict
+    handler_class.postactionfunc = printhelloworld
     server_class = BaseHTTPServer.HTTPServer
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()

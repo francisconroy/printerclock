@@ -7,6 +7,7 @@ import httpserver
 import doorstat as ds
 import stepmotor as sm
 import nymph_pins as np
+import dooropener as do
 
 ## Configure threads
 class ClockThread(threading.Thread):
@@ -27,12 +28,16 @@ import auth
 configfile = auth.ConfigFile("userdata.txt")
 configfile.print_users()
 
-door_status = ds.DoorStat(pin_dict_door_status)
+door_status = ds.DoorStat(np.pin_dict_door_status)
+
+door_driver = sm.StepperMotorTB6560(np.pin_dict_TB6560, sm.StepperMotorTB6560.type, 0, 260)
+room_door = do.Door(door_status, door_driver)
 
 handler_class = httpserver.Server
 handler_class.getfunc = door_status.check_door_status
 handler_class.getfunc_args = ()
 handler_class.postfunc = configfile.checkpin_from_dict
+handler_class.postactionfunc = room_door.open_door
 server_class = BaseHTTPServer.HTTPServer
 httpd = server_class(server_address, handler_class)
 
