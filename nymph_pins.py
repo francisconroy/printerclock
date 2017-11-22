@@ -1,3 +1,5 @@
+import RPi.GPIO as GPIO
+
 ## General config
 GPIO.setmode(GPIO.BCM)
 
