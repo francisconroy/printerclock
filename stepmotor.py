@@ -173,6 +173,6 @@ class StepperMotorTB6560(StepperMotor):
         else:
             return
         time.sleep(StepperMotor.delay)  # sleep 5us
-        GPIO.output(self.pindict['clkpin'], GPIO.HIGH)
+        GPIO.output(self.pindict['steppin'], GPIO.HIGH)
         time.sleep(StepperMotor.delay)  # sleep 5us
-        GPIO.output(self.pindict['clkpin'], GPIO.LOW)
+        GPIO.output(self.pindict['steppin'], GPIO.LOW)
