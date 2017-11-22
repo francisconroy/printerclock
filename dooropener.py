@@ -5,13 +5,10 @@ import stepmotor as sm
 
 
 class Door(object):
-    def __init__(self, pin_dict_status, pin_dict_driver):
-        self.pin_dict_status = pin_dict_status
-        self.pin_dict_driver = pin_dict_driver
-
+    def __init__(self, door_status, driver):
         #
-        self.door_status = ds.DoorStat(self.pin_dict_status)
-        self.door_driver = sm.StepperMotorTB6560("door_driver",0,260)
+        self.door_status = door_status
+        self.door_driver = driver
 
     def open_door(self):
         start_position = self.door_driver.current_position()
@@ -26,8 +23,9 @@ class Door(object):
 
 def main():
     import nymph_pins as np
-
-    room_door = Door(np.pin_dict_door_status, np.pin_dict_TB6560)
+    door_status = ds.DoorStat(np.pin_dict_status)
+    door_driver = sm.StepperMotorTB6560(np.pin_dict_driver, sm.StepperMotorTB6560.type, 0, 260)
+    room_door = Door(door_status, door_driver)
     room_door.open_door()
     print("Door is open!")
 
