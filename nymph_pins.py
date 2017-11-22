@@ -15,6 +15,6 @@ pin_dict_a4988 = {'dirpin': 4,
 # TB6560 pins
 pin_dict_TB6560 = {'dirpin': 16,
             'steppin': 21,
-            'enpin': 20}
+            'sleeppin': 20}
 # door status pins
 pin_dict_door_status = {'doorpin': 12}

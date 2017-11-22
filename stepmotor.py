@@ -141,7 +141,7 @@ class StepperMotorTB6560(StepperMotor):
 
     def pin_init(self):
         pass
-        self.reqpins = ['clkpin',  # does one step on the driver when you enable it
+        self.reqpins = ['steppin',  # does one step on the driver when you enable it
                         'dirpin',  # change direction of stepping (CW or CCW)
                         'sleeppin']  # takes driver out of sleep
         # set all pins as outputs
@@ -153,7 +153,7 @@ class StepperMotorTB6560(StepperMotor):
         # take driver out of sleep
         if self.pindict['sleeppin'] is not None:
             GPIO.output(self.pindict['sleeppin'], GPIO.LOW)
-            GPIO.output(self.pindict['clkpin'], GPIO.HIGH)
+            GPIO.output(self.pindict['steppin'], GPIO.HIGH)
             time.sleep(0.002)  # 2ms delay
 
     def step(self, direction):
