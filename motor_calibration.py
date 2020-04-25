@@ -1,6 +1,7 @@
 import stepmotor as sm
-motors = [sm.StepperMotorTB6560(),
-          sm.StepperMotorA4988()]
+import nymph_pins as np
+motors = [sm.StepperMotorTB6560,
+          sm.StepperMotorA4988]
 
 while 1:
     print("Motors:")
@@ -10,7 +11,7 @@ while 1:
     if motor_index >= len(motors):
         print("Invalid selection")
         exit(-1)
-    motor = motors[motor_index]
+    motor = motors[motor_index](np.pin_dict_a4988, sm.StepperMotorA4988.type, 0, 6800)
     print("Move the motor to the zero position")
     while 1:
         command = input("cmd:")
