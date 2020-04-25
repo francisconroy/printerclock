@@ -4,6 +4,7 @@
 # the file 'currentpos.txt' should be in the working directory and will be accessed every time the system starts. This way the printer can keep a record of it's current position.
 import RPi.GPIO as GPIO
 import time
+import calendar
 import os
 
 steps_per_segment = 272
@@ -51,14 +52,14 @@ def getposition(hrs, mins, dow):
         mm = '00'
 
     wday = dow
-    if (wday == 5 and hrs > 20) or (wday == 6 and hrs<7):
+    if (wday in [calendar.FRIDAY, calendar.SATURDAY] and hrs > 18) \
+            or (wday in [calendar.SATURDAY, calendar.SUNDAY] and hrs < 7):  # second part ensures that the clock doesn't jump to late at midnight
         search = 'party'
-
-    elif hrs >= 23 or hrs < 7:
+    elif hrs >= 22 or hrs < 7:
         search = 'late'
     else:
         if hrs > 12:
             hrs -= 12
         search = '{}:{}'.format(hrs, mm)
-    print hrs, mins, search
+    print(hrs, mins, search)
     return int(segdict[search])
