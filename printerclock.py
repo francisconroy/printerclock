@@ -55,7 +55,7 @@ def getposition(hrs, mins, dow):
     if (wday in [calendar.FRIDAY, calendar.SATURDAY] and hrs > 18) \
             or (wday in [calendar.SATURDAY, calendar.SUNDAY] and hrs < 7):  # second part ensures that the clock doesn't jump to late at midnight
         search = 'party'
-    elif hrs >= 22 or hrs < 7:
+    elif hrs >= 21 or hrs < 7:
         search = 'late'
     else:
         if hrs > 12:
